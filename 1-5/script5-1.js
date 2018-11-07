@@ -1,19 +1,20 @@
 "use strict";
 
 const settings = {
-	lightColor: '#d0d0d0',
-	darkColor: '#993300',
-	letters: ['','a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',''],
+  lightColor: '#d0d0d0',
+  darkColor: '#993300',
+  letters: ['','a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',''],
 }
 
 /**
  * @property {HTMLElement} gameContainerEl Контейнер игры (DOM элемент).
  */
 const chess = {
-	settings,
+  settings,
   gameContainerEl: document.getElementById('game'),
 
   figures: [
+// белые фигуры
   {name: 'R', color: 'w', pos: 'a1'},
   {name: 'N', color: 'w', pos: 'b1'},
   {name: 'B', color: 'w', pos: 'c1'},
@@ -31,6 +32,7 @@ const chess = {
   {name: 'p', color: 'w', pos: 'g2'},
   {name: 'p', color: 'w', pos: 'h2'},
 
+// черные фигуры
   {name: 'R', color: 'b', pos: 'a8'},
   {name: 'N', color: 'b', pos: 'b8'},
   {name: 'B', color: 'b', pos: 'c8'},
@@ -65,37 +67,42 @@ const chess = {
     pb: '&#9823;', // черная пешка
   },
 
- // Метод для вывода фигур
+ /**
+  * Метод для вывода фигур.
+  */
   renderFigure() {
-  	for (var i = 0; i < this.figures.length; i++) {
-	    // Получаем имя фигуры и цвет в одну строку.
-	    const figureHtmlProperty = this.figures[i].name + this.figures[i].color;
-	    // Получаем код фигуры из this.figureHtml используя строку из названия фигуры и ее цвета.
-	    const figureCode = this.figureHtml[figureHtmlProperty];
-	    // Выводим ее в ячейку.
-	    document.getElementById(this.figures[i].pos).innerHTML = figureCode;
-  	};
+    for (var i = 0; i < this.figures.length; i++) {
+      // Получаем имя фигуры и цвет в одну строку.
+      const figureHtmlProperty = this.figures[i].name + this.figures[i].color;
+      // Получаем код фигуры из this.figureHtml используя строку из названия фигуры и ее цвета.
+      const figureCode = this.figureHtml[figureHtmlProperty];
+      // Выводим ее в ячейку.
+      document.getElementById(this.figures[i].pos).innerHTML = figureCode;
+    };
   },
 
   /**
    * Метод отображения карты (игрового поля).
    */
   renderMap() {
-  	for (let i = 9; i >= 0; i--) {
-  		const trElem = document.createElement('tr');
+    for (let i = 9; i >= 0; i--) {
+      const trElem = document.createElement('tr');
       this.gameContainerEl.appendChild(trElem);
-  		for (let j = 0; j < 10; j++) {
-				const tdElem = document.createElement('td');
-				tdElem.id = this.settings.letters[j]+i;
-				if (this.isCellIsBlack(i, j)) {
-					tdElem.style.backgroundColor = this.settings.darkColor;
-				} else {
-					tdElem.style.backgroundColor = this.settings.lightColor;
-				}
-				tdElem.innerHTML = this.boardSigns(i, j);
-				trElem.appendChild(tdElem);
-  		}
-  	}
+      for (let j = 0; j < 10; j++) {
+        const tdElem = document.createElement('td');
+        // заполняем уникальный идентификатор у каждой клетки игрового поля.
+        tdElem.id = this.settings.letters[j]+i;
+        // раскрашиваем поле.
+        if (this.isCellIsBlack(i, j)) {
+          tdElem.style.backgroundColor = this.settings.darkColor;
+        } else {
+          tdElem.style.backgroundColor = this.settings.lightColor;
+        }
+        // заполняем крайние клетки поля обозначениями.
+        tdElem.innerHTML = this.boardSigns(i, j, tdElem.id);
+        trElem.appendChild(tdElem);
+      }
+    }
   },
 
   /**
@@ -105,27 +112,48 @@ const chess = {
    * @returns {boolean} true, если ячейка должна быть черной, иначе false.
    */
   isCellIsBlack(rowNum, colNum) {
-  	if (rowNum === 0 || rowNum === 9 || colNum === 0 || colNum === 9) {
-  		return false;
-  	} else {
-  		return !((rowNum + colNum) % 2);
-  	}
+    if (rowNum === 0 || rowNum === 9 || colNum === 0 || colNum === 9) {
+      return false;
+    } else {
+      return !((rowNum + colNum) % 2);
+    }
   },
 
-  boardSigns(i, j) {
-  	if ((i === 0 && j === 0) || 
-  		(i === 0 && j === 9) || 
-  		(i === 9 && j === 0) || 
-  		(i === 9 && j === 9)) {
-  		return '';
-  	} else if (i === 0 || i === 9) {
-  		return '&#'+(64+j);
-  	} else if (j === 0 || j === 9) {
-  		return '&#'+(48+i);
-  	} else {
-  		return '';
-  	}
-  	},
+  /**
+  * Присваивает значения по границам поля.
+   * @param {int} rowNum Номер в строке.
+   * @param {int} colNum Номер в колонке.
+   * @param {string} id идентификатор клетки.
+   * @returns {string} код для вставки в символьное обозначение поля.
+  */
+  boardSigns(rowNum, colNum, id) {
+    if ((id === '0') || (id === '9')) {
+      return '';
+    } else if (rowNum === 0 || rowNum === 9) {
+      return '&#'+(96+colNum);
+    } else if (colNum === 0 || colNum === 9) {
+      return '&#'+(48+rowNum);
+    } else {
+      return '';
+    }
+    },
+
+    /**
+    * Потенциальная возможность передвигать фигуры.
+    * Конечно это не лучшая реализация. Думаю правильно было бы изменять координаты фигуры в таблице, а потом перерисовывать поле figures.
+    */
+    figureMove(startPos, finishPos) {
+        let start = document.getElementById(startPos);
+        let finish = document.getElementById(finishPos);
+      if (start.innerHTML === '') {
+        alert('Ошибка! В клетке нет фигуры.');
+      } else if (startPos === finishPos) {
+        alert('Ошибка! Вы не походили.');
+      } else {
+        finish.innerHTML = start.innerHTML;
+        start.innerHTML = '';
+      }
+    },
 };
 
 // Запускаем метод отображения карты.
@@ -133,3 +161,11 @@ chess.renderMap();
 
 // Вызовем метод демонстрации получения кода фигуры и ее вывод.
 chess.renderFigure();
+
+//передаём в объект координаты начального и конечного поля передвижения фигуры.
+function moveFig() {
+  let a = (document.getElementById("startPos").value);
+  let b = (document.getElementById("finishPos").value);
+  chess.figureMove(a, b);
+}
+document.getElementById("move").onclick = moveFig;

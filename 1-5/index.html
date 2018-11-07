@@ -10,15 +10,28 @@
 		}
 		td {
 		border: 1px solid #888888;
-		width: 80px;
-		height: 80px;
+		width: 60px;
+		height: 60px;
 		text-align: center;
-		font-size: 3em;
+		font-size: 2em;
+		}
+		p {
+			width: 600px;
+			margin: 0 auto;
+			font-size: 2em;
+		}
+		input {
+			font-size: 0.8em;
 		}
 		</style>
 	</head>
 	<body>
-	<table id="game"></table>
+	<table id="game"></table><br>
+	
+	<p>Ходим с поля <input type="text" size="2" placeholder="e2" id="startPos">
+	 на поле <input type="text" size="2" placeholder="e4" id="finishPos">
+	 <input id="move" type="submit" value="Вперёд!"></p>
+
 	<script src="script5-1.js"></script>
 </body>
 </html>

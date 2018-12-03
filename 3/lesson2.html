@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JS2 - Lesson 2</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="menu-block"></div>
+<button id="killMenu">Убрать меню</button>
+<button id="newMenu">Показать меню</button>
+<script src="MenuItem.js"></script>
+<script src="Menu.js"></script>
+<script src="SubMenuitem.js"></script>
+<script>
+    window.onload = () => {
+        let menuBlock = document.getElementById('menu-block');
+
+        let menu = new Menu('mainmenu', 'mainmenu', [
+            new MenuItem('/', 'Главная'),
+            new SubMenuItem('submenu1', 'submenu', '/catalog', 'Каталог', [
+                new MenuItem('/electronics', 'Электроника'),
+                new MenuItem('/books','Книги'),
+                new MenuItem('/clothes','Одежда'),
+                new SubMenuItem('submenu2', 'submenu', '/dishes', 'Посуда', [
+                    new MenuItem('/moscow', 'Чистая'),
+                    new MenuItem('/leningrad', 'Грязная'),
+                    new MenuItem('/kiev', 'Б/у'),
+                    new MenuItem('/magadan', 'Битая'),
+                ]),
+            ]),
+            new MenuItem('/about', 'Корзина'),
+            new SubMenuItem('submenu3', 'submenu', '/cabinet', 'Личный кабинет', [
+                new MenuItem('/status', 'Статус заказа'),
+                new MenuItem('/uslov', 'Условия доставки'),
+                new SubMenuItem('submenu4', 'submenu', '/punkt', 'Пункты выдачи заказов', [
+                    new SubMenuItem('submenu5', 'submenu', '/moscow', 'Москва',[
+                        new MenuItem('/metro', 'Возле Метро'),
+                        new MenuItem('/mkad', 'заМКАДье'),
+                    ]),
+                    new MenuItem('/leningrad', 'Санкт Петербург'),
+                    new MenuItem('/kiev', 'Киев'),
+                    new MenuItem('/magadan', 'Магадан'),
+                ]),
+            ]),
+        ]);
+
+        menuBlock.innerHTML = menu.render();
+
+        let removeBtn = document.getElementById('killMenu');
+        removeBtn.addEventListener('click', () => menu.removeMenu(menuBlock));
+
+        let renewBtn = document.getElementById('newMenu');
+        renewBtn.addEventListener('click', () => {menuBlock.innerHTML = menu.render()});
+    }
+</script>
+</body>
+</html>
+
+<!--
+3. Создать функционал фотогалереи. Имеется статичный json-набор миниатюр, на основании которого строится сетка изображений со ссылками на полноразмерные картинки.
+4. *Создать два статических ответа {result : “success”} и {result: “error”}. В зависимости от каждого из них навесить на определенный ajax-запрос обработчик результата.
+-->

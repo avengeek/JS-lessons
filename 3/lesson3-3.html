@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Lesson 3-3</title>
+</head>
+<body>
+	<form id="valid-form" action="">
+		<input type="text" id="form-name" placeholder="Name">
+		<input type="text" id="form-phone" placeholder="Phone">
+		<input type="text" id="form-email" placeholder="E-mail">
+		<input type="text" id="form-message" placeholder="Your message here">
+		<button id="send-button" type="submit">Send</button>
+	</form>
+	<div id="name"></div>
+
+<script>
+	class Formdata{
+		constructor(name, phone, email, message){
+		this.name = name;
+		this.phone = phone;
+		this.email = email;
+		this.message = message;
+		}
+	}
+
+	function validate(mail) {
+		let mailRegExp = /([a-z-_\.]{1,30})@([a-z-_]+)\.(ru|su|com|pro|biz)/gi;
+		if(mail.match(mailRegExp)) return mail
+			else {
+				document.getElementById('form-email').style.border = '2px groove red';
+				return "Incorrect e-mail address.";
+			}
+	}
+
+	window.onload = () => {
+		let sendbtn = document.getElementById('send-button');
+		sendbtn.addEventListener('click', () => {
+			preventDefault();
+			let name = document.getElementById('form-name').value;
+			let phone = document.getElementById('form-phone').value;
+			let email = validate(document.getElementById('form-email').value);
+			document.getElementById('name').innerHTML = name + '<br>' + phone + '<br>' + email;
+		});
+	}
+</script>
+</body>
+</html>
